@@ -1,0 +1,70 @@
+<html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://timdream.org/wordcloud2.js/src/wordcloud2.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD6hLLddlXLuJE52eCmsFbA8OGZ0eh_UO4&sensor=false"></script>
+
+    <script src="./app.js"></script>
+    <link rel="stylesheet" href="./app.css">
+    <link rel="stylesheet" href="./spin.css">
+  </head>
+  <body>
+
+    <h1>Practica 1: API REST</h1>
+    <!--Hidden form for creating new buttons -->
+    <!-- START LOADING -->
+    <div id=loadingDiv class="lds-css ng-scope">
+      <h1>Procesando...</h1>
+      <div class="lds-spinner" style="100%;height:100%">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+
+    <!-- END LOADING -->
+    <div id="form-container">
+    	<label for="name" style="width:15%">Create stream:</label>
+    	<input id="name" style="width:20%"  type="text" placeholder="Stream name"/>
+    	<input id="track" style="width:40%"  type="text" placeholder="Track terms Comma Separated"/>
+    	<button id="create" style="width:10%" >Create</button>
+    </div>
+
+    <table cols="3">
+     <tr>
+         <td colspan="3">
+    	<div id="streamlist"></div>
+         </td>
+     </tr>
+     <tr>
+        <td>
+             <canvas id="wordcloud"></canvas> </td>
+        <td>
+    	 <canvas id="polarity"></canvas>
+
+        </td>
+        <td>
+    	<div id="mapcanvas"></div>
+     </tr>
+     <tr>
+        <td colspan="3">
+          <b>Last tweets:</b>
+            <div id="tweets">
+              <b>Todavía no hay tweets relacionados.</b>
+            	<!-- Cambiar para obtener dinámicamente los IDs de los tweets -->
+            	<!-- <a href="https://twitter.com/statuses/706797165885063168" target="_blank">Tweet1</a>
+            	<a href="https://twitter.com/statuses/706797817692553216" target="_blank">Tweet2</a> -->
+            </div>
+        </td>
+     </tr>
+     <tr>
+        <td colspan="3">
+    	<div id="fotos"></div>
+        </td>
+     </tr>
+
+    </table>
+
+
+  </body>
+</html>

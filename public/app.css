@@ -1,0 +1,91 @@
+
+div#loadingDiv{
+	position: fixed;
+	z-index: 999;
+	height: 2em;
+	width: 2em;
+	overflow: show;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+body{
+	margin: 0px;
+	text-align: center;
+}
+
+h1{
+	width:80%;
+	text-align: center;
+}
+
+button{
+    border: 1px solid black;
+    background-color: lightgray;
+    color: black;
+    border-radius: 0.5em;
+    padding: 4px;
+    margin: 3px;
+		width: 30%;
+    /* width: 100px; */
+}
+
+button#new{
+	width: 50px;
+	background-color: white;
+}
+
+table{
+	width: 910px;
+	margin-left: 30px;
+}
+
+div#streamlist{
+		display: flex;
+		flex-wrap: wrap;
+    width:910px;
+    background-color:purple;
+}
+
+div#form-container{
+    visibility:hidden;
+    width:910px;
+    height:50px;
+}
+
+canvas#wordcloud{
+    width:355px;
+    height:300px;
+    background-color:lightgrey;
+}
+
+canvas#polarity{
+    width:150px;
+    height:300px;
+    background-color:lightgrey;
+}
+
+div#tweets{
+    width:910px;
+    height:30px;
+    background-color:white;
+}
+
+div#mapcanvas{
+    width:400px;
+    height:300px;
+    background-color:lightgrey;
+}
+
+div#fotos{
+    width:910px;
+    /* height:150px; */
+		display: flex;
+		flex-wrap: wrap;
+    text-align:center;
+		justify-content: center;
+    background-color:purple;
+}

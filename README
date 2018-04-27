@@ -1,0 +1,10 @@
+æ
+*  PRÁCTICA 1
+*  Entrega Sergio Landete
+*************
+
+Para ejecutar el servicio REST deben seguirse estos pasos:
+
+1) Ejecutar: node myServer.js para poner en marcha el servicio
+2) Conectarse desde un navegador a "http://localhost:8080"
+3) Comenzar a utilizar el servicio
