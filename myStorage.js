@@ -1,6 +1,7 @@
 const gb=require('glob');
 const fs=require('fs');
 const readLastLines = require('read-last-lines');
+const firstline = require('firstline'); //NEW
 const utf8 = require('utf8');
 const events = require('events');
 
@@ -38,11 +39,22 @@ class myDB {
      });
   }
 
-  getDatasets (){
+
+  getMetaData(callback){ //NEW
+
+    let files=gb.glob(this.dataDir+'*.data',{sync:true});
+
+    let proms = files.map(fname => firstline(fname));
+
+    Promise.all(proms).then(values => callback(values.map(x => JSON.parse(x))));
+
+  }
+
+  getDatasets(){
     return this.datasets;
   }
 
-  getCounts (){
+  getCounts(){
     return this.count;
   }
 
@@ -60,6 +72,7 @@ class myDB {
         this.datasets.push(name);
         this.count[name]=0;
         data._type="metadata";
+        data.name=name;  //NEW
         data._n=0;
         data._dt=this.getTimeStamp();
         fs.appendFileSync(this.filename(name),JSON.stringify(data)+"\n");
