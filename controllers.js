@@ -58,7 +58,12 @@ exports.getListaIdStr = (req, res ) => {
     respuesta = respuesta.result;
     let n = (req.query.limit == null ) ? 10 : parseInt(req.query.limit);
     DB = new db.myDB('./data');
-    res.send({'result':respuesta.slice(0,n).map(x=>x.tweet_id)});
+    //console.log(respuesta);
+    if( respuesta != null )
+      res.send({'result':respuesta.slice(0,n).map(x=>x.tweet_id)});
+    else
+      res.send({'result': "error"});
+
   });
 
 };
@@ -155,6 +160,65 @@ exports.getHistoTwo = (req, res) => {
 
 //==================================END V2=====================================
 //==============================END Histograma=================================
+//--------------------------------JSON-LD--------------------------------------
+
+//A partir de un nombre de stream, crea el JSON asociado
+function nuevoJSONLD( json ) {
+
+  return {
+    "@type" : "SearchAction" ,
+    "name" : json.name,
+    "@identifier" : json.tweet_id,
+    "@query" : "http://localhost:8080/stream/" + json.name,
+    "@agent" : {
+      "@type" : "Person",
+      "name" : json.creator
+    },
+    "@startTime" : json._dt,
+    "@id" : json.track
+
+  };
+
+}
+
+
+
+
+
+exports.getGraph = (req, res ) => {
+  let datasets = DB.getMetaData( meta => {
+          //console.log(meta);
+          let listaElem = new Array();
+          meta.forEach( elem => {
+            //Generar JSON-LD de un Stream
+            let ld = nuevoJSONLD( elem );
+            //Meterlo al Array
+            //listaElem += ld;
+            listaElem.push( ld );
+            console.log(elem);
+          });
+  });
+
+};
+
+/*
+* *
+{
+  "@context": "http://schema.org",
+  "@type" : "SearchAction",
+  "@identifier" : id,
+  "@query" : "",
+  "@agent" {
+    "@type" : "Person",
+    "name" : "Sergio"
+  },
+  "@startTime" : dt,
+  "@id" : track
+}
+
+* *
+*/
+//----------------------------------END----------------------------------------
 //===============================END GETS======================================
 //=================================POSTS=======================================
 //=================================POSTS=======================================
@@ -165,8 +229,5 @@ exports.postDataset = (req, res) => {
   setTimeout( _ => DB = new db.myDB('./data'), 1000);
 };
 //===============================END POSTS=====================================
-
-
-
 
 exports.warmup = DB.events;

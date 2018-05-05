@@ -21,7 +21,10 @@ app.use(function(req, res, next) {
 app.get('/',ctrl.sendStatic);
 app.get('/streams',ctrl.sendDatasets);
 app.get('/streams/counts', ctrl.sendCounts);
-// app.get('/dataset/:name',ctrl.sendLastPosts);
+// GRAFO JSON-LD
+app.get('/stream/graph', ctrl.getGraph);
+//Para evitar conflictos colocamos primero el /stream/graph
+//Asi evitamos que se confunda con el nombre de un dataset
 app.get('/stream/:name',ctrl.getListaIdStr);
 app.get('/stream/:name/polarity',ctrl.sendPolaridad);
 app.get('/stream/:name/words', ctrl.getHistograma);
