@@ -126,7 +126,8 @@ class myDB {
 
         readLastLines.read(this.filename(name), n)
         .then((lines) => {
-          lines = utf8.decode(lines);
+          //Lo comento porque da fallo en el encode
+          //lines = utf8.decode(lines);
           let lista = lines.trim().split("\n");
           lista = lista.map(x => JSON.parse(x.trim()));
           lista = lista.filter(x => (x._type !== "metadata"));

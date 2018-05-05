@@ -164,26 +164,35 @@ exports.getHistoTwo = (req, res) => {
 
 //A partir de un nombre de stream, crea el JSON asociado
 function nuevoJSONLD( json ) {
-
   return {
     "@type" : "SearchAction" ,
     "name" : json.name,
-    "@identifier" : json.tweet_id,
+    "@identifier" : json.name,
     "@query" : "http://localhost:8080/stream/" + json.name,
     "@agent" : {
       "@type" : "Person",
       "name" : json.creator
     },
     "@startTime" : json._dt,
-    "@id" : json.track
+    "track" : json.track
+  };
+}
 
+function postJSONLD (name, track){
+  return {
+      "@type" : "SearchAction" ,
+      "name" : name,
+      "@identifier" : name,
+      "@query" : "http://localhost:8080/stream/" + name,
+      "@agent" : {
+        "@type" : "Person",
+        "name" : "Mugen"
+      },
+      "@startTime" : Date(),
+      "track" : track
   };
 
 }
-
-
-
-
 
 exports.getGraph = (req, res ) => {
   let datasets = DB.getMetaData( meta => {
@@ -191,11 +200,15 @@ exports.getGraph = (req, res ) => {
           let listaElem = new Array();
           meta.forEach( elem => {
             //Generar JSON-LD de un Stream
-            let ld = nuevoJSONLD( elem );
+            //let ld = nuevoJSONLD( elem );
+            let ld = elem;
             //Meterlo al Array
-            //listaElem += ld;
             listaElem.push( ld );
-            console.log(elem);
+            //console.log(elem);
+          });
+          res.send({
+            "@context": "http://schema.org/",
+            "@graph" : listaElem
           });
   });
 
@@ -224,7 +237,10 @@ exports.getGraph = (req, res ) => {
 //=================================POSTS=======================================
 exports.postDataset = (req, res) => {
   let body = req.body;
-  ST.createStream(body.name , body.track);
+  //Crear JSON-LD
+  let ld = postJSONLD(body.name, body.track);
+  ST.createStream(body.name , ld);
+  //ST.createStream(body.name , body.track);
   res.send({"result" : "success" });
   setTimeout( _ => DB = new db.myDB('./data'), 1000);
 };

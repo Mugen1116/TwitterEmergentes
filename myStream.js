@@ -13,6 +13,7 @@ class StreamManager {
 		this.DB = new db.myDB('./data');
 	}
 
+	/*
 	createStream(name, track) {
 		let stream = client.stream('statuses/filter', {track: track});
 
@@ -26,12 +27,39 @@ class StreamManager {
 				 														"texto":tweet.text,
 																		"coordinates":tweet.coordinates,
 																		"polaridad":sentiment(tweet.text).score});
+
+
 			}
 		});
 		setTimeout( _=> this.destroyStream(name), 50000);
 		stream.on('error', err => console.log(err));
 
-	} //create
+	}
+	*///create
+
+	//====================CREATE 2.0===========================
+	createStream(name, jsonld) {
+		let stream = client.stream('statuses/filter', {track: jsonld.track} );
+
+		this.streams[name] = stream;
+
+		this.DB.createDataset(name, jsonld);
+
+		stream.on('data', tweet => {
+			if (tweet.lang == "es" || tweet.user.lang == "es" ) {
+				this.DB.insertObject(name,{	"tweet_id":tweet.id_str,
+				 														"texto":tweet.text,
+																		"coordinates":tweet.coordinates,
+																		"polaridad":sentiment(tweet.text).score});
+
+
+			}
+		});
+		setTimeout( _=> this.destroyStream(name), 50000);
+		stream.on('error', err => console.log(err));
+
+	}
+	//==================END CREATE 2.0=========================
 
 	destroyStream(name){
     this.streams[name].destroy();
