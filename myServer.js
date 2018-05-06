@@ -23,6 +23,8 @@ app.get('/streams',ctrl.sendDatasets);
 app.get('/streams/counts', ctrl.sendCounts);
 // GRAFO JSON-LD
 app.get('/stream/graph', ctrl.getGraph);
+app.get('/stream/mongo/graph', ctrl.getGraphMongo);
+
 //Para evitar conflictos colocamos primero el /stream/graph
 //Asi evitamos que se confunda con el nombre de un dataset
 app.get('/stream/:name',ctrl.getListaIdStr);
@@ -32,7 +34,7 @@ app.get('/stream/:name/words', ctrl.getHistograma);
 app.get('/stream/:name/geo', ctrl.getGeo);
 //==================END GET==========================
 //===================POST============================
-app.post('/stream', ctrl.postDataset);
+app.post('/stream', ctrl.postDatasetMongo);
 //==================END POST=========================
 
 ctrl.warmup.once("warmup", _ => {

@@ -1,10 +1,11 @@
 æ
-*  PRÁCTICA 1
+*  PRÁCTICA 2
 *  Entrega Sergio Landete
 *************
 
 Para ejecutar el servicio REST deben seguirse estos pasos:
 
+0) Ejecutar: mongod --port 27017 --dbpath /data/db para poner en escucha la base de datos de MongoDB
 1) Ejecutar: node myServer.js para poner en marcha el servicio
 2) Conectarse desde un navegador a "http://localhost:8080"
 3) Comenzar a utilizar el servicio

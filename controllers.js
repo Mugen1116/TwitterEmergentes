@@ -1,6 +1,11 @@
 const db=require('./myStorage');
 const st = require('./myStream');
+//const warm = require('./warmupdb');
 const _ = require('underscore');
+const mng = require ('mongoose');
+const my_conn_data = "mongodb://twitterUser:twitterEmergentes@localhost:27017/twitter";
+const StreamModel = require('./streamModel');
+// const ItemModel = mng.model('Item', warm.itemSchema);
 let DB = new db.myDB('./data');
 let ST = new st.StreamManager();
 
@@ -136,33 +141,26 @@ exports.getHistograma =(req, res) => {
   });
 };
 //==================================END V1=====================================
-//====================================V2=======================================
-//Versión compactada con underscore anidado
-/*
-exports.getHistoTwo = (req, res) => {
-  DB.getLastObjects(req.params.name, 50, respuesta =>{
-    let lista = respuesta.result;
-    let vector = new Array();
-    //Spliteamos todas las palabras en una posición de un Array cada una
-    for(let i = 0; i < lista.length; i++ ) {
-      vector = vector.concat( lista[i].texto
-                              .replace(/[!\-,?.":;"\n\(\)\+]/gi, '')
-                              .replace(/\s\s+/g, ' ')
-                              .replace(/[\.]+$/g, '')
-                              .split(' '));
-    }
-//    let final = _.sortBy(_.countBy(vector)).reverse();
-    let final = _.countBy(_.sortBy( vector) );
-    res.send({'result': final});
-  });
-};
-*/
-
-//==================================END V2=====================================
 //==============================END Histograma=================================
 //--------------------------------JSON-LD--------------------------------------
-
 //A partir de un nombre de stream, crea el JSON asociado
+/*
+* *
+{
+  "@context": "http://schema.org",
+  "@type" : "SearchAction",
+  "@identifier" : id,
+  "@query" : "",
+  "@agent" {
+    "@type" : "Person",
+    "name" : "Sergio"
+  },
+  "@startTime" : dt,
+  "@id" : track
+}
+* *
+*/
+//Ya no se usa
 function nuevoJSONLD( json ) {
   return {
     "@type" : "SearchAction" ,
@@ -177,7 +175,6 @@ function nuevoJSONLD( json ) {
     "track" : json.track
   };
 }
-
 function postJSONLD (name, track){
   return {
       "@type" : "SearchAction" ,
@@ -191,9 +188,7 @@ function postJSONLD (name, track){
       "@startTime" : Date(),
       "track" : track
   };
-
 }
-
 exports.getGraph = (req, res ) => {
   let datasets = DB.getMetaData( meta => {
           //console.log(meta);
@@ -211,26 +206,20 @@ exports.getGraph = (req, res ) => {
             "@graph" : listaElem
           });
   });
-
 };
-
-/*
-* *
-{
-  "@context": "http://schema.org",
-  "@type" : "SearchAction",
-  "@identifier" : id,
-  "@query" : "",
-  "@agent" {
-    "@type" : "Person",
-    "name" : "Sergio"
-  },
-  "@startTime" : dt,
-  "@id" : track
+exports.getGraphMongo = (req, res ) => {
+  mng.connect(my_conn_data);
+  StreamModel.find( {} , (err, datos) => {
+      //Imprescincible que el close se haga dentro, si no, fallará
+      //Porque se cierra antes de ejecutar la consulta
+      res.send({
+        "@context" : "http://schema.org/",
+        "@graph" : datos
+      });
+      mng.connection.close();
+    }
+  );
 }
-
-* *
-*/
 //----------------------------------END----------------------------------------
 //===============================END GETS======================================
 //=================================POSTS=======================================
@@ -241,6 +230,23 @@ exports.postDataset = (req, res) => {
   let ld = postJSONLD(body.name, body.track);
   ST.createStream(body.name , ld);
   //ST.createStream(body.name , body.track);
+  res.send({"result" : "success" });
+  setTimeout( _ => DB = new db.myDB('./data'), 1000);
+};
+//====================AÑADIMOS EL POST A LA BD DE MONGODB======================
+exports.postDatasetMongo = (req, res ) => {
+  let body = req.body;
+  //Crear JSON-LD
+  let ld = postJSONLD(body.name, body.track);
+  ST.createStream(body.name , ld);
+  //Ahora añadimos a Mongo
+  mng.connect(my_conn_data);
+
+  let pruebaInsert = new StreamModel( ld );
+  pruebaInsert.save(function(err){
+    if (err) throw err;
+    mng.connection.close();
+  });
   res.send({"result" : "success" });
   setTimeout( _ => DB = new db.myDB('./data'), 1000);
 };
