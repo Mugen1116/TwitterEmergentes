@@ -166,7 +166,7 @@ function nuevoJSONLD( json ) {
     "@type" : "SearchAction" ,
     "name" : json.name,
     "@identifier" : json.name,
-    "@query" : "http://localhost:1616/stream/" + json.name,
+    "@query" : "http://localhost:8080/stream/" + json.name,
     "@agent" : {
       "@type" : "Person",
       "name" : json.creator
@@ -180,7 +180,7 @@ function postJSONLD (name, track){
       "@type" : "SearchAction" ,
       "name" : name,
       "@identifier" : name,
-      "@query" : "http://localhost:1616/stream/" + name,
+      "@query" : "http://localhost:8080/stream/" + name,
       "@agent" : {
         "@type" : "Person",
         "name" : "Mugen"
