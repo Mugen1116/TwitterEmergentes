@@ -1,16 +1,16 @@
 {
   "name": "api-server-example",
   "version": "1.0.0",
-  "description": "An example in NodeJS",
+  "description": "Despligue API REST Twitter",
   "main": "myServer.js",
   "scripts": {
-    "test": "node myServer.js"
+    "start": "node myServer.js"
   },
   "keywords": [
     "twitter",
     "mashup"
   ],
-  "author": "Rafael Berlanga",
+  "author": "Sergio Landete",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
